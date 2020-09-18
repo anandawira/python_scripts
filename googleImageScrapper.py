@@ -5,8 +5,9 @@
 import pyinputplus as pyip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import os, requests, time
-import base64
+import os
+import requests
+import time
 
 baseUrl = 'https://www.google.com/search?tbm=isch&q='
 
@@ -19,9 +20,14 @@ browser.get(baseUrl + keyword)
 
 # Pressing End key as long as we haven't reach the bottom page yet
 while True:
-    if browser.find_element_by_css_selector("*[value='Show more results']").is_displayed():
-        browser.find_element_by_css_selector("*[value='Show more results']").click()
-    if not len(browser.find_elements_by_css_selector("*[data-status='3']"))==0:
+    show_more_button = browser.find_element_by_css_selector(
+        "*[value='Show more results']"
+    )
+    if show_more_button.is_displayed():
+        show_more_button.click()
+    if not len(browser.find_elements_by_css_selector(
+        "*[data-status='3']")
+    ) == 0:
         break
     browser.find_element_by_xpath('//body').send_keys(Keys.CONTROL+Keys.END)
     time.sleep(0.5)
@@ -29,7 +35,9 @@ while True:
 # Extract image urls
 images_src = []
 
-for tag in browser.find_elements_by_css_selector("div > div > div > a > div > img"):
+for tag in browser.find_elements_by_css_selector(
+    "div > div > div > a > div > img"
+):
     src = tag.get_attribute('src')
     if src is None:
         src = tag.get_attribute('data-src')
@@ -37,7 +45,7 @@ for tag in browser.find_elements_by_css_selector("div > div > div > a > div > im
 
 browser.close()
 
-urls, base64_strs, others = [],[],[]
+urls, base64_strs, others = [], [], []
 
 print(len(images_src))
 
@@ -56,7 +64,8 @@ keyword = keyword.replace(' ', '_')
 os.mkdir(keyword)
 for i, url in enumerate(urls):
     res = requests.get(url)
-    imageFile = open(os.path.join(keyword, keyword + '_' + str(i+1).zfill(3)+'.jpeg'), 'wb')
+    fileName = keyword + '_' + str(i+1).zfill(3)+'.jpeg'
+    imageFile = open(os.path.join(keyword, fileName), 'wb')
     imageFile.write(res.content)
     imageFile.close()
     print(f'{i+1}/{len(urls)} images downloaded')

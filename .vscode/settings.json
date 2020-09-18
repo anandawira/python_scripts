@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python"
+    "python.pythonPath": "/home/ananda/.local/share/virtualenvs/python_scripts-X3HAflP5/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true
 }

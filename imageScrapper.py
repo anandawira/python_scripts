@@ -6,7 +6,8 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import requests, os
+import requests
+import os
 import pyinputplus as pyip
 
 baseUrl = 'https://duckduckgo.com/?t=h_&iax=images&ia=images&q='
@@ -38,16 +39,13 @@ imageUrls = imageUrls[:number_of_images]
 
 # Download the image
 os.mkdir(keyword)
-print('Downloading %s images' %number_of_images)
+print('Downloading %s images' % number_of_images)
 for i, url in enumerate(imageUrls):
     res = requests.get(url)
-    try:
-        res.raise_for_status()
-    except:
-        print('an error occured, please try again')
-        exit()
+    res.raise_for_status()
     # Save the image
-    imageFile = open(os.path.join(keyword, keyword+'_'+str(i+1).zfill(len(str(number_of_images)))+'.jpeg'), 'wb')
+    fileName = keyword+'_'+str(i+1).zfill(len(str(number_of_images)))+'.jpeg'
+    imageFile = open(os.path.join(keyword, fileName), 'wb')
     for chunk in res.iter_content(100000):
         imageFile.write(chunk)
     imageFile.close()
